@@ -1,7 +1,13 @@
-/** @format */
+import React from 'react';
+import { View, AppRegistry } from 'react-native';
+import Header from './components/Header';
+import ContactList from './components/ContactList';
 
-import {AppRegistry} from 'react-native';
-import App from './App';
-import {name as appName} from './app.json';
+const App = () => (
+    <View>
+        <Header title={'Contacts'} />
+        <ContactList />
+    </View>
+);
 
-AppRegistry.registerComponent(appName, () => App);
+AppRegistry.registerComponent('contacts', () => App);
