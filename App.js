@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, FlatList, AppRegistry } from 'react-native';
 import { Header, SearchBar, List, ListItem } from 'react-native-elements';
+import Expo from 'expo';
 
 export default class App extends React.Component {
     constructor(props) {
@@ -13,11 +14,13 @@ export default class App extends React.Component {
             seed: 1,
             error: null,
             refreshing: false,
+            searchKey: '',
         };
     }
 
     componentDidMount() {
-        this.makeRemoteRequest();
+        // this.makeRemoteRequest();
+        this.getAllContacts();
     }
 
     makeRemoteRequest = () => {
@@ -51,21 +54,17 @@ export default class App extends React.Component {
 
     };
 
-    renderSeparator = () => {
-        return (
-          <View
-            style={{
-              height: 1,
-              width: "86%",
-              backgroundColor: "#CED0CE",
-              marginLeft: "14%"
-            }}
-          />
-        );
-    };
+    handleSearch = (key) => {
+        this.setState({searchKey: key});
+    }
 
-    renderSearch = () => {
-        return <SearchBar placeholder="Type Here..." lightTheme round />;
+    renderSearchBar = () => {
+        return <SearchBar
+            round
+            lightTheme
+            placeholder="Search through all contacts"
+            onChangeText={(e) => {this.handleSearch(e)}}
+        />;
     };
 
     renderFooter = () => {
@@ -84,6 +83,38 @@ export default class App extends React.Component {
         );
     };
 
+    getAllContacts = async () => {
+
+        // Ask for permission to query contacts.
+        const permission = await Expo.Permissions.askAsync(Expo.Permissions.CONTACTS);
+        if (permission.status !== 'granted') {
+            // Permission was denied...
+            return;
+        }
+        
+        Expo.Contacts.getContactsAsync({
+			fields: [
+				Expo.Contacts.PHONE_NUMBERS,
+				Expo.Contacts.EMAILS,
+			],
+			pageSize: 147,
+			pageOffset: 0,
+		}).then(async ({data}) => {
+			this.setState({
+				contacts: data
+			});
+		})
+    }
+    
+    extractNumberFrom = (number) => {
+        if ( number && number.number ) {
+            return(
+                JSON.parse(JSON.stringify(number.number))
+            ) 
+        }
+        return;
+    }
+
     render() {
         return (
             <View >
@@ -93,19 +124,17 @@ export default class App extends React.Component {
                 <View>
                     <List containerStyle={{marginTop: 0, marginBottom: 20, borderTopWidth: 0, borderBottomWidth: 0}}>
                         <FlatList
-                            data={this.state.data}
+                            data={this.state.contacts}
                             renderItem={({ item }) => (
                             <ListItem
                                 roundAvatar
-                                title={`${item.name.first} ${item.name.last}`}
-                                avatar={{ uri: item.picture.thumbnail }}
+                                title={`${item.name}`}
+                                subtitle={this.extractNumberFrom(item.phoneNumbers[0])}
                             />
                             )}
-                            keyExtractor={item => item.email}
-                            ListHeaderComponent={this.renderSearch}
+                            keyExtractor={item => item.name}
+                            ListHeaderComponent={this.renderSearchBar}
                             ListFooterComponent={this.renderFooter}
-                            refreshing={this.state.refreshing}
-                            onRefresh={this.handleRefresh}
                         />
                     </List>
                 </View>
