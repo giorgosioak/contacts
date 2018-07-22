@@ -1,5 +1,14 @@
 {
   "expo": {
-    "sdkVersion": "27.0.0"
+    "name": "Contacst",
+    "description": "A Contacts App build on React Native",
+    "slug":"ReactNativeContactsApp",
+    "sdkVersion": "27.0.0",
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "package": "com.giorgosioak.ReactNativeContactsApp"
+    }
   }
 }
