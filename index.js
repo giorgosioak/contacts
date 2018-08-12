@@ -1,13 +1,9 @@
 import React from 'react';
-import { View, AppRegistry } from 'react-native';
-import Header from './components/Header';
-import ContactList from './components/ContactList';
+import { AppRegistry } from 'react-native';
+import Navigation from './src/navigation';
 
 const App = () => (
-    <View>
-        <Header title={'Contacts'} />
-        <ContactList />
-    </View>
+    <Navigation />
 );
 
 AppRegistry.registerComponent('contacts', () => App);

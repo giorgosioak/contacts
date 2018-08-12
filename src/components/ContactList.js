@@ -50,7 +50,7 @@ class ConstactList extends Component {
                 data={this.state.contacts}
                 renderItem={({ item }, index) =>
                     <View>
-                        <TouchableOpacity onPress={() => console.log('pressed contact')}>
+                        <TouchableOpacity onPress={() => { this.props.navigation.navigate('Details', { contact: item }); }}>
                             <View style={{ flexDirection: 'row', height: 50, alignItems: 'center' }}>
                                 <View style={{ width: 50, paddingLeft: 25 }}>
                                     <Image
