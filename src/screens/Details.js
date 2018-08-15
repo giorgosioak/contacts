@@ -20,7 +20,6 @@ export default class Details extends Component {
         if (contact.name.length > 0 && contact.familyName !== null) { contact.name = `${contact.name} `; }
         if (contact.familyName !== null) { contact.name = `${contact.name}${contact.familyName}`; }
 
-        console.log(contact);
         this.state = {
             contact,
         };

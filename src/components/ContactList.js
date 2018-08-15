@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { FlatList, Image, PermissionsAndroid, Text, TouchableOpacity, View } from 'react-native';
 import Contacts from 'react-native-contacts';
 
-import Images from '../assets/Images'; 
+import Images from '../assets/Images';
 
 class ConstactList extends Component {
     constructor(props) {
@@ -15,13 +15,15 @@ class ConstactList extends Component {
 
     componentDidMount() {
         this.requestContactsPermission()
-            .then(
+        .then((granted) => {
+            if (granted) {
                 Contacts.getAll((err, contacts) => {
                     if (err) throw err;
 
                     this.setState({ contacts });
-                })
-            );
+                });
+            }
+        });
     }
 
     async requestContactsPermission() {
@@ -34,11 +36,12 @@ class ConstactList extends Component {
                         'so you can view your awesome friends.'
                 }
             );
-            if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-                console.log('Contacts permission granted');
-            } else {
-                console.log('Contacts permission denied');
-            }
+            return (granted);
+            // if (granted) {
+            //     console.log('Contacts permission granted');
+            // } else {
+            //     console.log('Contacts permission denied');
+            // }
         } catch (err) {
             console.warn(err);
         }
@@ -64,7 +67,7 @@ class ConstactList extends Component {
                             </View>
                         </TouchableOpacity>
                     </View>
-                    }
+                }
                 keyExtractor={(item, index) => index.toString()}
                 ItemSeparatorComponent={() => <View style={{ backgroundColor: '#f3f3f3', height: 1 }} />}
             />
